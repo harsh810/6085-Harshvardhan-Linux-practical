@@ -1,0 +1,69 @@
+1 .Installing DHCP Server
+Before proceeding towards installing a DHCP server, first update the packages by running the following command in Terminal:
+
+$ sudo apt get update
+Then run the following command in the Terminal to install DCHP server:
+
+$ sudo apt-get install isc-dhcp-server -y
+Wait for a while until the installation is completed.
+DHCP configuration file is located at /etc/dhcp/dhcpd.conf. We can open this file by running the following command in Terminal
+$ sudo nano /etc/dhcp/dhcpd.conf
+
+2.Defining the Subnet
+
+Add the following lines in the configuration file to define the subnet, range of IP addresses, domain and domain name servers like below:
+
+To define Subnet, add the following lines:
+
+subnet 192.168.110.0 netmask 255.255.255.0 {
+
+When defining subnet information (range, default gateway, domain name server), make sure to end the lines with a semi-colon (;) and enclosed them in curly braces { }.
+
+To specify the range of leased addresses, add the following line. The range defines the set of IP address pool, from which the IP addresses are allocated to DHCP clients
+
+range 192.168.110.5 192.168.1.10;
+
+To specify the default gateway, add the following line:
+
+option routers 192.168.110.1;
+
+To specify the domain name servers, add the following line:
+
+option domain-name-servers 8.8.8.8, 8.8.4.4;
+
+Make the changes as per your network values.
+3.DHCP Global configuration
+Here are the basic steps that we need in order to configure the global settings for setting up a DHCP server.
+
+1. To specify the default and maximum lease time, find the parameters default-lease-time and max-lease-time in the config file and change their values.
+
+default-lease-time 600;
+
+max-lease-time 7200;
+2. If you have multiple interfaces, you will need to define which interface the DHCP server should use to serve DHCP requests. In the configuration file, find and edit the value of INTERFACESv4 and modify it with the interface that we want to serve the requests.
+
+INTERFACESv4="eth0"
+3. To make DHCP server the official DHCP server for the clients, uncomment the following line in the configuration file (by removing the # character):
+
+$ authoritative;
+Once done with it, save and close the configuration file
+
+4.Manage DHCP services
+Once you have done with the configuration, you can use the following commands to manage the DHCP server:
+
+To verify if the service is running fine, check the status of DHCP service by running the following command in Terminal:
+
+$ sudo systemctl status isc-dhcp-server.service
+To start the DHCP service, run the following command in Terminal:
+
+$ sudo systemctl start isc-dhcp-server.service
+To stop the DHCP service, run the following command in Terminal:
+
+P isc-dhcp-server.service
+To restart the DHCP service, run the following command in Terminal:
+
+$ sudo systemctl restart isc-dhcp-server.service
+
+
+
+
